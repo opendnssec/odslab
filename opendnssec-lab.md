@@ -204,3 +204,76 @@ this one instead of the unsigned zone file.
 6. Verify that DNSSEC records are correctly served for this zone.
 
         > dig @127.0.0.1 groupX.odslab.se SOA +dnssec
+
+
+
+
+## Publishing the DS RR
+
+The zone is now signed and we have verified that DNSSEC is working. It
+is then time to publish the DS RR.
+
+1. Wait until the KSK is ready to be published in the parent zone.
+
+        > sudo ods-ksmutil key list -v
+
+2. Show the DS RRs that we are about to publish. Notice that they share the key tag with the KSK.
+
+        > sudo ods-ksmutil key export --zone groupX.odslab.se --ds
+
+3. Ask your teacher to update the DS in the parent zone.
+4. Wait until the DS has been uploaded.
+
+        > dig @ns.odslab.se groupX.odslab.se DS
+
+5. It is now safe to tell the Enforcer that it has been seen.
+
+        > sudo ods-ksmutil key ds-seen --zone groupX.odslab.se --keytag KEYTAG
+
+6. The KSK is now considered as active.
+
+        > sudo ods-ksmutil key list
+
+7. Verify that we can query the zone from the *resolver* machine. The AD-flag should be set.
+
+        > dig +dnssec www.groupX.odslab.se
+
+
+## KSK Rollover
+
+The KSK rollover is usually done at the end of its lifetime. But a key
+rollover can be enforced before that by issuing the rollover command.
+
+1. Check how long time it is left before the KSK should be rolled.
+
+        > sudo ods-ksmutil key list
+
+2. We will now enforce a key rollover. If a key rollover has been
+    initiated then this command will be ignored.
+
+        > sudo ods-ksmutil key rollover --zone groupX.odslab.se --keytype KSK
+
+3. Wait until the new KSK is ready. It should be maximum 10 minutes. If it is longer than that, then you probably missed to adjust a value in your KASP. Update the KASP to match the LAB policy given here in the document.
+
+        > sudo ods-ksmutil key list -v
+
+4. The DS RRs can be exported to the teacher once the new KSK is ready. Ask the teacher to upload it.
+
+        > sudo ods-ksmutil key export –ds --zone groupX.odslab.se --keystate ready > groupX.ds
+
+5.  Wait until the DS has been uploaded.
+
+        > dig @ns.odslab.se groupX.odslab.se DS
+
+6. It is now safe to tell the Enforcer that it has been seen.
+
+        > sudo ods-ksmutil key ds-seen --zone groupX.odslab.se --keytag TAG
+
+7. The new KSK is now considered as active.
+
+        > sudo ods-ksmutil key list
+
+8. Verify that we can query the zone from the *resolver* machine.
+
+        > sudo rndc flush
+        > dig +dnssec www.groupX.odslab.se
