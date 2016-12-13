@@ -29,7 +29,7 @@ The configuration needs to be adjusted to better fit this setup.
 
 ## Creating a Policy
 
-We will use the provided KASP policy “lab". It uses very low values on the timing parameters, just so that key rollovers will go faster in this lab environment.
+We will use the provided KASP policy "lab". It uses very low values on the timing parameters, just so that key rollovers will go faster in this lab environment.
 
 1. Open the kasp.xml file.
 
@@ -277,3 +277,210 @@ rollover can be enforced before that by issuing the rollover command.
 
         > sudo rndc flush
         > dig +dnssec www.groupX.odslab.se
+
+
+
+## Adding a New Policy
+
+We will add a new policy named "lab2”. It will use RSASHA512 with NSEC
+instead of the default RSASHA256 with NSEC3.
+
+1. Open the kasp.xml file.
+
+        > sudo vim /etc/opendnssec/kasp.xml
+
+2. Copy the policy named "lab”.
+
+3. Rename the policy to "lab2”:
+
+        <Policy name="lab2">
+
+4. Change from NSEC to NSEC3.
+
+        <Denial>
+          <NSEC3>
+            <Resalt>P100D</Resalt>
+            <Hash>
+              <Algorithm>1</Algorithm>
+              <Iterations>5</Iterations>
+              <Salt length="8"/>
+            </Hash>
+          </NSEC3>
+        </Denial>
+
+5. Change KSK and ZSK algorithm to RSASHA512. You can find the algorithm numbers at http://www.iana.org/assignments/dns-sec-alg-numbers/.
+
+6. Save and exit.
+
+7. Verify that the KASP looks OK.
+
+        > sudo ods-kaspcheck
+
+8. Load the new policy into OpenDNSSEC.
+
+        > sudo ods-ksmutil update kasp
+
+
+## Adding a New Zone
+
+A second zone will be added by using the command line interface.
+
+1. Make a copy of your current zone.
+
+        > cd /var/cache/bind/zones/unsigned/
+        > sudo cp groupX.odslab.se sub.groupX.odslab.se
+
+2. Add it to OpenDNSSEC. You will get an error from *rndc*, because we have not configured BIND to know about the sub-zone. This will be done later.
+
+        > sudo ods-ksmutil zone add --zone sub.groupX.odslab.se \
+                                     --policy lab2 \
+                                     --input /var/cache/bind/zones/unsigned/sub.groupX.odslab.se \
+                                     --output /var/cache/bind/zones/signed/sub.groupX.odslab.se
+
+3. Have a look in syslog and see that the zone gets signed and that BIND does not know about the zone.
+
+        > sudo tail /var/log/syslog
+
+4.  Add the zone BIND.
+
+        > sudo vim /etc/bind/named.conf.local
+        > sudo rndc reload
+
+This zone is present on the same server as your original parent zone. Any DNS query on it will thus get an answer, but a delegation to it should be added in the parent zone. This will be fixed in the next lab.
+
+
+## Updating the Zone Content
+
+We need to create a delegation to the zone that we just created. And also make sure that include the DS RRs.
+
+1. Wait until the KSK is ready in the new zone.
+
+        > sudo ods-ksmutil key list
+
+2. Export the DS for the zone.
+
+        > sudo ods-ksmutil key export --zone sub.groupX.odslab.se --ds
+
+3. Add these DS records and create a delegation to the zone. Remember to remove the TTL from the DS RRs.
+
+        > sudo vim /var/cache/bind/zones/unsigned/groupX.odslab.se
+
+        sub IN NS nsX.odslab.se.
+        sub IN DS ...
+
+4. Signal OpenDNSSEC to read the zone content again.
+
+        > sudo ods-signer sign groupX.odslab.se
+
+5. Go the *resolver* and query for the DS.
+
+        > dig sub.groupX.odslab.se DS
+
+6.  Tell OpenDNSSEC that the DS has been seen.
+
+        > sudo ods-ksmutil key ds-seen \
+                               --zone sub.groupX.odslab.se \
+                               --keytag KEYTAG
+
+
+## Zone Transfers
+
+OpenDNSSEC may also be fetch unsigned zones and/or serve signed zones using its built in zone transfer server.
+
+In this lab we will set up OpenDNSSEC for outbound zone transfers protected with TSIG. We will also configure our local BIND authoritative name server to fetch the signed zone using zone transfer instead of reading it from a file on disk.
+
+1. Generate a TSIG new base64 encoded random secret using the following command:
+
+        > openssl rand –base64 32
+
+2. Update the adapter configuration file with the new TSIG secret.
+
+        > sudo vim /etc/opendnssec/addns.xml
+
+    File contents:
+
+        <TSIG>
+          <Name>tsig.groupX.odslab.se</Name>
+          <Algorithm>hmac-sha256</Algorithm>
+          <Secret>SECRET</Secret>
+        </TSIG>
+
+    We also need to enable outbound zone transfer for our nameserver using the TSIG secret.
+
+         <Outbound>
+           <ProvideTransfer>
+             <Peer>
+               <Prefix>127.0.0.1</Prefix>
+               <Key>tsig.groupX.odslab.se</Key>
+             </Peer>
+           </ProvideTransfer>
+           <Notify>
+             <Remote>
+               <Address>127.0.0.1</Address>
+             </Remote>
+           </Notify
+         </Outbound>
+
+3. We also need to enable the listener in the main configuration file. As we already have a nameserver listening on port 53, we use a different port (5353) in this lab.
+
+        > sudo vim /etc/opendnssec/conf.xml
+
+        <Listener>
+        <Interface><Port>5353</Port></Interface>
+        </Listener>
+
+4. Almost done, time to update the zone list and select DNS as the output adapter.
+
+        > sudo vim /etc/opendnssec/zonelist.xml
+
+        <Output>
+          <Adapter type="DNS">/etc/opendnssec/addns.xml</Adapter>
+        </Output>
+
+5. Reimport the zonelist and restart the Signer Engine.
+
+        > sudo ods-ksmutil zonelist import
+        > sudo ods-signer stop
+        > sudo ods-signer start
+
+6. Check that OpenDNSSEC is listening on port 5353.
+
+        > sudo netstat –anp | grep :5353
+
+7. Use dig to verify that zone transfer works as expected.
+
+        > dig @127.0.0.1 –p 5353 \
+          –y hmac-sha256:tsig.groupX.odslab.se:SECRET \
+          groupX.odslab.se
+
+8.  Update the name server configuration to fetch the zone via zone transfer.
+
+        > sudo install –d –o bind –g bind /var/cache/bind/zones/slave
+        > sudo vim /etc/bind/named.conf.local
+
+         key tsig.groupX.odslab.se. {
+             algorithm hmac-sha256;
+             secret "replace with secret generated above";
+         };
+         
+         masters opendnssec {
+             127.0.0.1 port 5353 key tsig.groupX.odslab.se.;
+         };
+         
+         zone "groupX.odslab.se" {
+             type slave;
+             masters { opendnssec; };
+             file "zones/slave/groupX.odslab.se";
+         };
+
+    That was a massive piece of configuration! You can always check your configuration for syntax errors using the following command:
+
+        > named-checkconf
+
+9.  Finally, restart BIND.
+
+        > sudo rndc reload
+
+10.  You should also verify that the zone is served by BIND.
+
+        > dig +dnssec @127.0.0.1 groupX.odslab.se SOA
