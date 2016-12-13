@@ -13,6 +13,12 @@ All documents are distributed by OpenDNSSEC under a Creative Commons Attribution
 - [HSM Testing and Benchmarking](hsm-testing.md)
 - [Install OpenDNSSEC](opendnssec-install.md)
 - [Publish unsigned zone using BIND](publish-unsigned.md)
+- [OpenDNSSEC lab](opendnssec-lab.md)
+- [Testing](testing.md)
+- [OpenDNSSEC integration](opendnssec-integration.md)
+
+
+## Administrativa
 
 - [Workshop HOWTO](workshop-howto.md)
 
