@@ -105,3 +105,37 @@ We will use the provided KASP policy “lab". It uses very low values on the tim
 10. Setup the KASP database.
 
         > sudo ods-ksmutil setup
+
+
+
+
+## Adding the Zone
+
+Zones can be added in two ways, either by command line or by editing the zonelist.xml. We will edit the zone list in this lab.
+
+1. Open the zonelist.xml file.
+
+        > sudo vim /etc/opendnssec/zonelist.xml
+
+2. Uncomment the example zone.
+
+3. Change the name of the zone and the paths to the zone files.
+
+        <Zone name="groupX.odslab.se">
+          <Policy>lab</Policy>
+          <SignerConfiguration>/var/opendnssec/signconf/groupX.odslab.se.xml</SignerConfiguration>
+          <Adapters>
+            <Input>
+              <Adapter type="File">/var/cache/bind/zones/unsigned/groupX.odslab.se</Adapter>
+            </Input>
+            <Output>
+              <Adapter type="File">/var/cache/bind/zones/signed/groupX.odslab.se</Adapter>
+            </Output>
+          </Adapters>
+        </Zone>
+
+4. Save and exit.
+
+5. Update the Enforcer database. You will get a warning that the Enforcer could not be notified. That’s OK -- we haven’t started it yet and will do that later.
+
+        > sudo ods-ksmutil update zonelist
