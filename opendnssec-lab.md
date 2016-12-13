@@ -139,3 +139,68 @@ Zones can be added in two ways, either by command line or by editing the zonelis
 5. Update the Enforcer database. You will get a warning that the Enforcer could not be notified. That’s OK -- we haven’t started it yet and will do that later.
 
         > sudo ods-ksmutil update zonelist
+
+
+
+## Signing the Zone
+
+It is now time to sign the zone!
+
+1. Start OpenDNSSEC
+
+        > sudo ods-control start
+
+2. Check the syslog to see that the two daemons started, that the signconf was generated, and that Signer engine signed the zone.
+
+        > tail -n 100 /var/log/syslog
+
+3. Have a look on the signconf.
+
+        > less /var/opendnssec/signconf/groupX.odslab.se.xml
+
+4. Have a look on the signed zone file.
+
+        > less /var/cache/bind/zones/signed/groupX.odslab.se
+
+
+
+## Publish the Signed Zone
+
+The signed zone is now just a file on disc. We have to tell BIND to use
+this one instead of the unsigned zone file.
+
+1. Edit the BIND configuration and change the path to the zone file
+
+        > sudo vim /etc/bind/named.conf.local
+
+    File contents:
+
+        zone "groupX.odslab.se" {
+            type master;
+            file "zones/signed/groupX.odslab.se";
+        };
+
+2. Reload the configuration.
+
+        > sudo rndc reload
+
+3. Tell OpenDNSSEC to notify BIND every time the zone has been signed.
+
+        > sudo vim /etc/opendnssec/conf.xml
+
+    Update:
+
+        <NotifyCommand>/usr/sbin/rndc reload %zone</NotifyCommand>
+
+4. Restart the Signer Engine.
+
+        > sudo ods-signer stop
+        > sudo ods-signer start
+
+5. Verify that the zone is signed on the resolver machine. Notice that the AD-flag is not set.
+
+        > dig +dnssec www.groupX.odslab.se
+
+6. Verify that DNSSEC records are correctly served for this zone.
+
+        > dig @127.0.0.1 groupX.odslab.se SOA +dnssec
