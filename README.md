@@ -14,6 +14,8 @@ All documents are distributed by OpenDNSSEC under a Creative Commons Attribution
 - [Install OpenDNSSEC](opendnssec-install.md)
 - [Publish unsigned zone using BIND](publish-unsigned.md)
 
+- [Workshop HOWTO](workshop-howto.md)
+
 
 ## Useful Information
 
