@@ -12,12 +12,12 @@ It is always good to verify the functionality of the HSM before starting to sign
 
     File contents:
 
-    <Repository name="SoftHSM">
-      <Module>/usr/lib/softhsm/libsofthsm.so/Module>
-      <TokenLabel>OpenDNSSEC<TokenLabel>
-      <PIN>XXX<>/PIN>
-      <SkipPublicKey/>
-    </Repository>
+        <Repository name="SoftHSM">
+          <Module>/usr/lib/softhsm/libsofthsm.so/Module>
+          <TokenLabel>OpenDNSSEC<TokenLabel>
+          <PIN>XXX<>/PIN>
+          <SkipPublicKey/>
+        </Repository>
 
 3.  Now it is possible for OpenDNSSEC to access the tokens.
 
