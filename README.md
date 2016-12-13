@@ -11,3 +11,5 @@ All documents are distributed by OpenDNSSEC under a Creative Commons Attribution
 - [Setup a Secure Resolver using Unbound](recursive-unbound.md)
 - [SoftHSM](softhsm.md)
 - [HSM Testing and Benchmarking](hsm-testing.md)
+- [Install OpenDNSSEC](opendnssec-install.md)
+- [Publish unsigned zone using BIND](publish-unsigned.md)
