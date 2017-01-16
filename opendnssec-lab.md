@@ -44,7 +44,7 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
 
         > sudo vim /etc/opendnssec/kasp.xml
 
-2. The policy we’re going to use is called "lab".
+2. The policy we're going to use is called "lab".
 
         <Policy name="lab">
 
