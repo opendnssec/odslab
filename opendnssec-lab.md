@@ -11,30 +11,25 @@ The configuration needs to be adjusted to better fit this setup.
 
     The repository list was adjusted in a previous lab.
 
-2. We will be rolling keys in a rapid pace., burning up a lot of keys in a
-   Year.  The default setting is to pre-generate keys for a year, which
+2. We will be rolling keys in a rapid pace, burning up a lot of keys in a
+   year.  The default setting is to pre-generate keys for a year, which
    will take a long time with so many keys.  So we want to decrease this by
    modifying the setting AutomaticKeyGenerationPeriod to:
 
         <AutomaticKeyGenerationPeriod>P2D</AutomaticKeyGenerationPeriod>
 
-```comment
-No need for setting the Enforcer Interval anymore, the Enforcer Interval is
-deprecated.  It will know itself when it should run.
-```
-
-2. There is only one core on the lab machine and the performance was not increased by using multiple threads. For this lab, will then only use one thread for the Signer in OpenDNSSEC.
+3. There is only one core on the lab machine and the performance was not increased by using multiple threads. For this lab, will then only use one thread for the Signer in OpenDNSSEC.
 
         <WorkerThreads>1</WorkerThreads>
         <SignerThreads>1</SignerThreads>
 
-3. Save the file and exit.
+4. Save the file and exit.
 
-4. Setup the KASP database.
+5. Setup the KASP database.
 
         > sudo ods-enforcer-db-setup
 
-    And answer yes
+    And answer yes.
 
 ## Creating a Policy
 
@@ -117,8 +112,7 @@ At this point we should start the OpenDNSSEC daemons.  Both enforcer and signer 
 
         > sudo ods-control start
 
-Be sure to monitor the system log for any error conditions, some problems can only be reported once the
-daemons are already in the background.
+Be sure to monitor the system log for any error conditions, some problems can only be reported once the daemons are already in the background.
 
         > tail /var/log/syslog
 
@@ -151,8 +145,7 @@ Zones can be added in two ways, either by command line or by editing the zonelis
 
 ## Publish the Signed Zone
 
-The signed zone is now just a file on disc. We have to tell BIND to use
-this one instead of the unsigned zone file.
+The signed zone is now just a file on disc. We have to tell BIND to use this one instead of the unsigned zone file.
 
 1. Edit the BIND configuration and change the path to the zone file
 
@@ -195,8 +188,7 @@ this one instead of the unsigned zone file.
 
 ## Publishing the DS RR
 
-The zone is now signed and we have verified that DNSSEC is working. It
-is then time to publish the DS RR.
+The zone is now signed and we have verified that DNSSEC is working. It is then time to publish the DS RR.
 
 1. Wait until the KSK is ready to be published in the parent zone.
 
@@ -207,6 +199,7 @@ is then time to publish the DS RR.
         > sudo ods-enforcer key export --zone groupX.odslab.se --ds
 
 3. Ask your teacher to update the DS in the parent zone.
+
 4. Wait until the DS has been uploaded.
 
         > dig @ns.odslab.se groupX.odslab.se DS
@@ -227,8 +220,7 @@ is then time to publish the DS RR.
 
 ## KSK Rollover
 
-The KSK rollover is usually done at the end of its lifetime. But a key
-rollover can be enforced before that by issuing the rollover command.
+The KSK rollover is usually done at the end of its lifetime. But a key rollover can be enforced before that by issuing the rollover command.
 
 1. Check how long time it is left before the KSK should be rolled.
 
@@ -268,8 +260,7 @@ rollover can be enforced before that by issuing the rollover command.
 
 ## Adding a New Policy
 
-We will add a new policy named "lab2".  It will use RSASHA512 with NSEC
-instead of the default RSASHA256 with NSEC3.
+We will add a new policy named "lab2".  It will use RSASHA512 with NSEC instead of the default RSASHA256 with NSEC3.
 
 1. Open the kasp.xml file.
 
