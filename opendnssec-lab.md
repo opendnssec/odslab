@@ -11,11 +11,17 @@ The configuration needs to be adjusted to better fit this setup.
 
     The repository list was adjusted in a previous lab.
 
-2. We will be rolling keys in a rapid pace., thus need to lower the Enforcer Interval.
+2. We will be rolling keys in a rapid pace., burning up a lot of keys in a
+   Year.  The default setting is to pre-generate keys for a year, which
+   will take a long time with so many keys.  So we want to decrease this by
+   modifying the setting AutomaticKeyGenerationPeriod to:
 
-    File contents:
+        <AutomaticKeyGenerationPeriod>P2D</AutomaticKeyGenerationPeriod>
 
-        <Interval>PT120S</Interval>
+```comment
+No need for setting the Enforcer Interval anymore, the Enforcer Interval is
+deprecated.  It will know itself when it should run.
+```
 
 2. There is only one core on the lab machine and the performance was not increased by using multiple threads. For this lab, will then only use one thread for the Signer in OpenDNSSEC.
 
@@ -24,8 +30,11 @@ The configuration needs to be adjusted to better fit this setup.
 
 3. Save the file and exit.
 
+4. Setup the KASP database.
 
+        > sudo ods-enforcer-db-setup
 
+    And answer yes
 
 ## Creating a Policy
 
@@ -102,53 +111,31 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
 
         > sudo ods-kaspcheck
 
-10. Setup the KASP database.
+## Start OpenDNSSEC
 
-        > sudo ods-ksmutil setup
-
-
-
-
-## Adding the Zone
-
-Zones can be added in two ways, either by command line or by editing the zonelist.xml. We will edit the zone list in this lab.
-
-1. Open the zonelist.xml file.
-
-        > sudo vim /etc/opendnssec/zonelist.xml
-
-2. Uncomment the example zone.
-
-3. Change the name of the zone and the paths to the zone files.
-
-        <Zone name="groupX.odslab.se">
-          <Policy>lab</Policy>
-          <SignerConfiguration>/var/opendnssec/signconf/groupX.odslab.se.xml</SignerConfiguration>
-          <Adapters>
-            <Input>
-              <Adapter type="File">/var/cache/bind/zones/unsigned/groupX.odslab.se</Adapter>
-            </Input>
-            <Output>
-              <Adapter type="File">/var/cache/bind/zones/signed/groupX.odslab.se</Adapter>
-            </Output>
-          </Adapters>
-        </Zone>
-
-4. Save and exit.
-
-5. Update the Enforcer database. You will get a warning that the Enforcer could not be notified. That’s OK -- we haven’t started it yet and will do that later.
-
-        > sudo ods-ksmutil update zonelist
-
-
-
-## Signing the Zone
-
-It is now time to sign the zone!
-
-1. Start OpenDNSSEC
+At this point we should start the OpenDNSSEC daemons.  Both enforcer and signer daemons are started using:
 
         > sudo ods-control start
+
+Be sure to monitor the system log for any error conditions, some problems can only be reported once the
+daemons are already in the background.
+
+        > tail /var/log/syslog
+
+Import the initial KASP in OpenDNSSEC:
+
+        > sudo ods-enforcer policy import
+
+## Add and sign the Zone
+
+Zones can be added in two ways, either by command line or by editing the zonelist.xml.  The command line is the one for now.
+
+1. Add the zone to the enforcer which will in turn inform the zone to be signed:
+
+        > sudo ods-enforcer zone add --zone ods --policy lab \
+                    --input /var/cache/bind/zones/unsigned/groupX.odslab.se \
+                    --output /var/cache/bind/zones/signed/groupX.odslab.se
+
 
 2. Check the syslog to see that the two daemons started, that the signconf was generated, and that Signer engine signed the zone.
 
@@ -161,8 +148,6 @@ It is now time to sign the zone!
 4. Have a look on the signed zone file.
 
         > less /var/cache/bind/zones/signed/groupX.odslab.se
-
-
 
 ## Publish the Signed Zone
 
@@ -215,11 +200,11 @@ is then time to publish the DS RR.
 
 1. Wait until the KSK is ready to be published in the parent zone.
 
-        > sudo ods-ksmutil key list -v
+        > sudo ods-enforcer key list -v
 
 2. Show the DS RRs that we are about to publish. Notice that they share the key tag with the KSK.
 
-        > sudo ods-ksmutil key export --zone groupX.odslab.se --ds
+        > sudo ods-enforcer key export --zone groupX.odslab.se --ds
 
 3. Ask your teacher to update the DS in the parent zone.
 4. Wait until the DS has been uploaded.
@@ -228,13 +213,14 @@ is then time to publish the DS RR.
 
 5. It is now safe to tell the Enforcer that it has been seen.
 
-        > sudo ods-ksmutil key ds-seen --zone groupX.odslab.se --keytag KEYTAG
+        > sudo ods-enforcer key ds-seen --zone groupX.odslab.se --keytag KEYTAG
 
 6. The KSK is now considered as active.
 
-        > sudo ods-ksmutil key list
+        > sudo ods-enforcer key list
 
-7. Verify that we can query the zone from the *resolver* machine. The AD-flag should be set.
+7. Verify that we can query the zone from the *resolver* machine.
+   The AD-flag should be set.
 
         > dig +dnssec www.groupX.odslab.se
 
@@ -246,32 +232,32 @@ rollover can be enforced before that by issuing the rollover command.
 
 1. Check how long time it is left before the KSK should be rolled.
 
-        > sudo ods-ksmutil key list
+        > sudo ods-enforcer key list
 
 2. We will now enforce a key rollover. If a key rollover has been
-    initiated then this command will be ignored.
+   initiated then this command will be ignored.
 
-        > sudo ods-ksmutil key rollover --zone groupX.odslab.se --keytype KSK
+        > sudo ods-enforcer key rollover --zone groupX.odslab.se --keytype KSK
 
 3. Wait until the new KSK is ready. It should be maximum 10 minutes. If it is longer than that, then you probably missed to adjust a value in your KASP. Update the KASP to match the LAB policy given here in the document.
 
-        > sudo ods-ksmutil key list -v
+        > sudo ods-enforcer key list -v
 
 4. The DS RRs can be exported to the teacher once the new KSK is ready. Ask the teacher to upload it.
 
-        > sudo ods-ksmutil key export –ds --zone groupX.odslab.se --keystate ready > groupX.ds
+        > sudo ods-enforcer key export --ds --zone groupX.odslab.se --keystate ready > groupX.ds
 
-5.  Wait until the DS has been uploaded.
+5. Wait until the DS has been uploaded.
 
         > dig @ns.odslab.se groupX.odslab.se DS
 
 6. It is now safe to tell the Enforcer that it has been seen.
 
-        > sudo ods-ksmutil key ds-seen --zone groupX.odslab.se --keytag TAG
+        > sudo ods-enforcer key ds-seen --zone groupX.odslab.se --keytag KEYTAG
 
 7. The new KSK is now considered as active.
 
-        > sudo ods-ksmutil key list
+        > sudo ods-enforcer key list
 
 8. Verify that we can query the zone from the *resolver* machine.
 
@@ -282,16 +268,16 @@ rollover can be enforced before that by issuing the rollover command.
 
 ## Adding a New Policy
 
-We will add a new policy named "lab2”. It will use RSASHA512 with NSEC
+We will add a new policy named "lab2".  It will use RSASHA512 with NSEC
 instead of the default RSASHA256 with NSEC3.
 
 1. Open the kasp.xml file.
 
         > sudo vim /etc/opendnssec/kasp.xml
 
-2. Copy the policy named "lab”.
+2. Copy the policy named "lab".
 
-3. Rename the policy to "lab2”:
+3. Rename the policy to "lab2":
 
         <Policy name="lab2">
 
@@ -318,7 +304,7 @@ instead of the default RSASHA256 with NSEC3.
 
 8. Load the new policy into OpenDNSSEC.
 
-        > sudo ods-ksmutil update kasp
+        > sudo ods-enforcer policy import
 
 
 ## Adding a New Zone
@@ -355,11 +341,11 @@ We need to create a delegation to the zone that we just created. And also make s
 
 1. Wait until the KSK is ready in the new zone.
 
-        > sudo ods-ksmutil key list
+        > sudo ods-enforcer key list
 
 2. Export the DS for the zone.
 
-        > sudo ods-ksmutil key export --zone sub.groupX.odslab.se --ds
+        > sudo ods-enforcer key export --zone sub.groupX.odslab.se --ds
 
 3. Add these DS records and create a delegation to the zone. Remember to remove the TTL from the DS RRs.
 
@@ -378,10 +364,9 @@ We need to create a delegation to the zone that we just created. And also make s
 
 6.  Tell OpenDNSSEC that the DS has been seen.
 
-        > sudo ods-ksmutil key ds-seen \
+        > sudo ods-enforcer key ds-seen \
                                --zone sub.groupX.odslab.se \
                                --keytag KEYTAG
-
 
 ## Zone Transfers
 

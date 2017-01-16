@@ -2,9 +2,9 @@
 
 There are three areas to think of when integrating OpenDNSSEC with your environment.
 
-- dding / removing zones
-- one distribution
-- ending the public key to the parent zone
+- Adding / removing zones
+- Zone distribution
+- Sending the public key to the parent zone
 
 The first two have been covered in previous labs. This lab will cover the third area by using a simple script.
 
@@ -37,12 +37,12 @@ The first two have been covered in previous labs. This lab will cover the third 
 
 4. Restart the Enforcer.
 
-        > sudo ods-ksmutil stop
-        > sudo ods-ksmutil start
+        > sudo ods-enforcer stop
+        > sudo ods-enforcer start
 
 5. Enforce a key rollover.
 
-        > sudo ods-ksmutil key rollover \
+        > sudo ods-enforcer key rollover \
                            --zone sub.groupX.odslab.se \
                            --keytype KSK
 

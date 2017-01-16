@@ -1,18 +1,26 @@
 # Publish unsigned zone using BIND
 
-
 1.  Also install an authoritative nameserver.
 
         > sudo apt-get install bind9
 
+2.  Change its configuration to make sure its DNSSEC aware:
 
-2.  Create some directories.
+        > sudo vim /etc/bind/named.conf.options
+
+    Make sure the following line:
+
+        dnssec-enable yes;
+
+    Is added in the options section.
+
+3.  Create some directories.
 
         > sudo mkdir /var/cache/bind/zones
         > sudo mkdir /var/cache/bind/zones/unsigned
         > sudo mkdir /var/cache/bind/zones/signed
 
-3.  Create a zone named after your group.
+4.  Create a zone named after your group.
 
         > sudo vim /var/cache/bind/zones/unsigned/groupX.odslab.se
 
@@ -30,7 +38,7 @@
         @   IN NS nsX.odslab.se.
         www IN CNAME nsX.odslab.se.
 
-4.  Add the zone to BIND.
+5.  Add the zone to BIND.
 
         sudo vim /etc/bind/named.conf.local
 
@@ -41,10 +49,10 @@
             file "zones/unsigned/groupX.odslab.se";
         };
 
-5. Reload the server.
+6. Reload the server.
 
         > sudo rndc reload
 
-6.  Try resolving the information from the resolver.
+7.  Try resolving the information from the resolver.
 
         > dig groupX.odslab.se SOA
