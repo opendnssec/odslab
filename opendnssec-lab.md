@@ -318,12 +318,13 @@ A second zone will be added by using the command line interface.
 
 2. Add it to OpenDNSSEC. You will get an error from *rndc*, because we have not configured BIND to know about the sub-zone. This will be done later.
 
-        > sudo ods-ksmutil zone add --zone sub.groupX.odslab.se \
-                                     --policy lab2 \
-                                     --input /var/cache/bind/zones/unsigned/sub.groupX.odslab.se \
-                                     --output /var/cache/bind/zones/signed/sub.groupX.odslab.se
+        > sudo ods-enforcer zone add --zone sub.groupX.odslab.se \
+                 --policy lab2 \
+                 --input /var/cache/bind/zones/unsigned/sub.groupX.odslab.se \
+                 --output /var/cache/bind/zones/signed/sub.groupX.odslab.se
 
-3. Have a look in syslog and see that the zone gets signed and that BIND does not know about the zone.
+3. Have a look in syslog and see that the zone gets signed and that BIND does
+   not know about the zone.
 
         > sudo tail /var/log/syslog
 
@@ -376,7 +377,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 1. Generate a TSIG new base64 encoded random secret using the following command:
 
-        > openssl rand –base64 32
+        > openssl rand -base64 32
 
 2. Update the adapter configuration file with the new TSIG secret.
 
@@ -414,8 +415,9 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
         <Interface><Port>5353</Port></Interface>
         </Listener>
 
-4. Almost done, time to update the zone list and select DNS as the output adapter.
+4. Almost done, time to update the zone list and select DNS as the output adapter.  For this we export the zonelist to get an up-to-date copy, modify it and import it back
 
+        > sudo ods-enforcer zonelist export
         > sudo vim /etc/opendnssec/zonelist.xml
 
         <Output>
@@ -424,23 +426,23 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 5. Reimport the zonelist and restart the Signer Engine.
 
-        > sudo ods-ksmutil zonelist import
+        > sudo ods-enforcer zonelist import
         > sudo ods-signer stop
         > sudo ods-signer start
 
 6. Check that OpenDNSSEC is listening on port 5353.
 
-        > sudo netstat –anp | grep :5353
+        > sudo netstat -anp | grep :5353
 
 7. Use dig to verify that zone transfer works as expected.
 
-        > dig @127.0.0.1 –p 5353 \
-          –y hmac-sha256:tsig.groupX.odslab.se:SECRET \
+        > dig @127.0.0.1 -p 5353 \
+          -y hmac-sha256:tsig.groupX.odslab.se:SECRET \
           groupX.odslab.se
 
 8.  Update the name server configuration to fetch the zone via zone transfer.
 
-        > sudo install –d –o bind –g bind /var/cache/bind/zones/slave
+        > sudo install -d -o bind -g bind /var/cache/bind/zones/slave
         > sudo vim /etc/bind/named.conf.local
 
          key tsig.groupX.odslab.se. {

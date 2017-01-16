@@ -28,7 +28,12 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 
 7.  Restart Unbound
 
-        > sudo systemctl restart unbound
+        > sudo /etc/init.d/unbound restart
+
+```comment
+For some reason under Ubuntu 14.04.5, unbound is not registered as
+a service, but a restart as old-trusty-better init script works:
+```
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 
@@ -37,3 +42,8 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 9.  Also try resolving a domain where DNSSEC is broken.
 
         > dig www.trasigdnssec.se
+
+    But we can see that in fact the domain does contain the information
+    if we bypass the DNSSEC validation:
+
+        > dig +cd +dnssec www.trasigdnssec.se
