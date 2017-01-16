@@ -1,10 +1,6 @@
 # Install OpenDNSSEC
 
-This lab will prepare the second server by installing the latest software.
-
-```comment
-Perhaps comment on why to compile from source in this lab excercise.
-```
+This lab will prepare the second server by installing the latest software. Although there are binary packages available for many systems, we will compile the latest version from source code in this lab excercise in order to better understand the dependencies and the build process.
 
 1.  Connect to the server (nsX.odslab.se) by using SSH or PuTTY.
 2.  Change the host name.
@@ -32,18 +28,14 @@ build-essential is more part of the pre-requisites for compiling OpenDNSSEC.
 This means that this item could be dropped.
 ```
 
-5.  Also install an authoritative nameserver.
+5.  Also install a separate authoritative nameserver. For many deployment scenarios one can use OpenDNSSEC, but in this exercise we'll use BIND 9 as a standalone authoritative nameserver.
 
         > sudo apt-get install bind9
-
-```comment
-Should explain why.  I could imagine we later split this in first using
-OpenDNSSEC file-based, and later switch to XFR adapters.
-```
 
 6.  We want to use an HSM and we are going to use SoftHSM.
 
         > sudo apt-get install softhsm
+
 7.  Continue to install some prerequisites to be able to compile OpenDNSSEC
 
         > sudo apt-get install build-essential libssl-dev libldns-dev
