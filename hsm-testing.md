@@ -15,7 +15,7 @@ It is always good to verify the functionality of the HSM before starting to sign
         <Repository name="SoftHSM">
           <Module>/usr/lib/softhsm/libsofthsm.so/Module>
           <TokenLabel>OpenDNSSEC<TokenLabel>
-          <PIN>XXX<>/PIN>
+          <PIN>XXXX></PIN>
           <SkipPublicKey/>
         </Repository>
 
