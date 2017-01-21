@@ -17,12 +17,6 @@ All documents are distributed by OpenDNSSEC under a Creative Commons Attribution
 - [Testing](testing.md)
 - [OpenDNSSEC integration](opendnssec-integration.md)
 
-```comment
-The order of hsm-testing and opendnssec-install should be reversed, as
-the former would require a command from opendnssec installation.
-Also the section on softhsm depends on softhsm already being installed by
-the opendnssec-install section.
-```
 
 ## Administrativa
 

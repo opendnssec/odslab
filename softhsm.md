@@ -28,10 +28,6 @@ The command will fail as we do not have read/write privileges to the tokens nor 
 
         > tail /var/log/syslog
 
-```comment
-no sudo needed here on Ubuntu
-```
-
 4. Try again with correct privileges.
 
         > sudo softhsm --show-slots

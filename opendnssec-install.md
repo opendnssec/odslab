@@ -7,26 +7,12 @@ This lab will prepare the second server by installing the latest software. Altho
 
         > sudo hostname nsX.odslab.se
 
-```comment
-Why do this?  It isn't already set?  We could just do this for them
-as this is really just preparation of the machine itself.
-```
-
 3.  Logout and login to get an updated command prompt.
 4.  Start by installing the build tools.
 
         > sudo apt-get update
         > sudo apt-get upgrade
         > sudo apt-get install build-essential
-
-```comment
-Package dnsutils is already included in bind9 package.  Unfortunate we have
-to use bind9 here, NSD would have been nice.  We could also use drill in
-stead of dig.
-I think update and upgrade should be pre-prepaired.  Installing the
-build-essential is more part of the pre-requisites for compiling OpenDNSSEC.
-This means that this item could be dropped.
-```
 
 5.  Also install a separate authoritative nameserver. For many deployment scenarios one can use OpenDNSSEC, but in this exercise we'll use BIND 9 as a standalone authoritative nameserver.
 
