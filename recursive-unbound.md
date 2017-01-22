@@ -28,12 +28,7 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 
 7.  Restart Unbound
 
-        > sudo /etc/init.d/unbound restart
-
-```comment
-For some reason under Ubuntu 14.04.5, unbound is not registered as
-a service, but a restart as old-trusty-better init script works:
-```
+        > systemctl restart unbound
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 
