@@ -20,12 +20,13 @@ This lab will prepare the second server by installing the latest software. Altho
 
 6.  We want to use an HSM and we are going to use SoftHSM.
 
-        > sudo apt-get install softhsm
+        > sudo apt-get install softhsm2
 
 7.  Continue to install some prerequisites to be able to compile OpenDNSSEC
 
-        > sudo apt-get install build-essential libssl-dev libldns-dev
-        > sudo apt-get install libxml2-dev libxml2-utils libsqlite3-dev sqlite3
+        > sudo apt-get install libssl-dev libldns-dev \
+                               libxml2-dev libxml2-utils \
+                               libsqlite3-dev sqlite3
 
 8.  Install OpenDNSSEC. The version number to use will be provided by your teacher.
 

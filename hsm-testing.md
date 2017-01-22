@@ -19,7 +19,7 @@ will verify the interoperability.
     File contents:
 
         <Repository name="SoftHSM">
-          <Module>/usr/lib/softhsm/libsofthsm.so/Module>
+          <Module>/usr/lib/x86_64-linux-gnu/softhsm/libsofthsm2.so</Module>
           <TokenLabel>OpenDNSSEC<TokenLabel>
           <PIN>XXXX></PIN>
           <SkipPublicKey/>
