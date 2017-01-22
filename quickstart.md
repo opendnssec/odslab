@@ -20,6 +20,8 @@
         libxml2-dev libxml2-utils \
         libsqlite3-dev sqlite3
 
+### OpenDNSSEC 2.0.4
+
     wget http://dist.opendnssec.org/source/opendnssec-2.0.4.tar.gz
     tar xzf opendnssec-2.0.4.tar.gz
     cd opendnssec-2.0.4 
