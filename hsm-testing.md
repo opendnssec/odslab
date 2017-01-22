@@ -37,4 +37,4 @@ will verify the interoperability.
    has been noted that using multiple threads on these virtual machines
    will decrease the performance dramatically.
 
-        > sudo ods-hsmspeed -r SoftHSM -i 1000 -s 1024 -t 1
+        > sudo ods-hsmspeed -r SoftHSM -i 1000 -s 2048 -t 1
