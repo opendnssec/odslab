@@ -5,7 +5,7 @@
 
 The configuration needs to be adjusted to better fit this setup.
 
-1. Open the configuration for editing.
+1. Open the configuration for editing:
 
         sudo vim /etc/opendnssec/conf.xml
 
@@ -25,7 +25,7 @@ The configuration needs to be adjusted to better fit this setup.
 
 4. Save the file and exit.
 
-5. Setup the KASP database.
+5. Setup the KASP database:
 
         sudo ods-enforcer-db-setup
 
@@ -35,15 +35,15 @@ The configuration needs to be adjusted to better fit this setup.
 
 We will use the provided KASP policy "lab". It uses very low values on the timing parameters, just so that key rollovers will go faster in this lab environment.
 
-1. Open the kasp.xml file.
+1. Open the kasp.xml file:
 
         sudo vim /etc/opendnssec/kasp.xml
 
-2. The policy we're going to use is called "lab".
+2. The policy we're going to use is called "lab", it is already defined beginning at the following statement:
 
         <Policy name="lab">
 
-3. Signatures are set to have a short lifetime.
+3. Signatures are set to have a short lifetime:
 
         <Signatures>
           <Resign>PT10M</Resign>
@@ -56,27 +56,27 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
           <InceptionOffset>PT3600S</InceptionOffset>
         </Signatures>
 
-4. The TTL and safety margins for the keys are also lower.
+4. The TTL and safety margins for the keys are also lower:
 
         <TTL>PT300S</TTL>
         <RetireSafety>PT360S</RetireSafety>
         <PublishSafety>PT360S</PublishSafety>
 
-5. Set the KSK lifetime to 3 hours and the ZSK to 2 hours.
+5. Set the KSK lifetime to 2 hours and the ZSK to 1 hours. Also make sure both the KSK and the ZSK are 2048-bit RSA/SHA-256 (algorithm 8):
 
         <KSK>
           <Algorithm length="2048">8</Algorithm>
-          <Lifetime>PT3H</Lifetime>
+          <Lifetime>PT2H</Lifetime>
           <Repository>SoftHSM</Repository>
         </KSK>
 
         <ZSK>
-          <Algorithm length="1024">8</Algorithm>
-          <Lifetime>PT2H</Lifetime>
+          <Algorithm length="2048">8</Algorithm>
+          <Lifetime>PT1H</Lifetime>
           <Repository>SoftHSM</Repository>
         </ZSK>
 
-6. The values for the SOA can be found in the zone we created earlier. We will use a unix timestamp as the serial number.
+6. The values for the SOA can be found in the zone we created earlier. We will use a unix timestamp as the serial number:
 
         <Zone>
           <PropagationDelay>PT300S</PropagationDelay>
@@ -87,7 +87,7 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
           </SOA>
         </Zone>
 
-7. And these values are from the parent zone.
+7. And these values are from the parent zone:
 
         <Parent>
           <PropagationDelay>PT5M</PropagationDelay>
@@ -106,17 +106,20 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
 
         sudo ods-kaspcheck
 
+   OpenDNSSEC will warn you that when you use Y (for Year) in duration fields, it is interpreted as 365 days.
+
 ## Start OpenDNSSEC
 
-At this point we should start the OpenDNSSEC daemons.  Both enforcer and signer daemons are started using:
+1. At this point we should start the OpenDNSSEC daemons.  Both enforcer and signer daemons are started using:
 
+        sudo mkdir /var/run/opendnssec
         sudo ods-control start
 
-Be sure to monitor the system log for any error conditions, some problems can only be reported once the daemons are already in the background.
+2. Be sure to monitor the system log for any error conditions, some problems can only be reported once the daemons are already in the background.
 
-        > tail /var/log/syslog
+        tail /var/log/syslog
 
-Import the initial KASP in OpenDNSSEC:
+3. Import the initial KASP in OpenDNSSEC:
 
         sudo ods-enforcer policy import
 
@@ -126,28 +129,27 @@ Zones can be added in two ways, either by command line or by editing the zonelis
 
 1. Add the zone to the enforcer which will in turn inform the zone to be signed:
 
-        sudo ods-enforcer zone add --zone ods --policy lab \
+        sudo ods-enforcer zone add --zone groupX.odslab.se --policy lab \
                     --input /var/cache/bind/zones/unsigned/groupX.odslab.se \
                     --output /var/cache/bind/zones/signed/groupX.odslab.se
 
+2. Check the syslog to see that the two daemons started, that the signconf was generated, and that Signer engine signed the zone:
 
-2. Check the syslog to see that the two daemons started, that the signconf was generated, and that Signer engine signed the zone.
+        tail -n 100 /var/log/syslog
 
-        > tail -n 100 /var/log/syslog
+3. Have a look on the signconf:
 
-3. Have a look on the signconf.
+        less /var/opendnssec/signconf/groupX.odslab.se.xml
 
-        > less /var/opendnssec/signconf/groupX.odslab.se.xml
+4. Have a look on the signed zone file:
 
-4. Have a look on the signed zone file.
-
-        > less /var/cache/bind/zones/signed/groupX.odslab.se
+        less /var/cache/bind/zones/signed/groupX.odslab.se
 
 ## Publish the Signed Zone
 
 The signed zone is now just a file on disc. We have to tell BIND to use this one instead of the unsigned zone file.
 
-1. Edit the BIND configuration and change the path to the zone file
+1. Edit the BIND configuration and change the path to the zone file:
 
         sudo vim /etc/bind/named.conf.local
 
@@ -158,11 +160,11 @@ The signed zone is now just a file on disc. We have to tell BIND to use this one
             file "zones/signed/groupX.odslab.se";
         };
 
-2. Reload the configuration.
+2. Reload the configuration:
 
         sudo rndc reload
 
-3. Tell OpenDNSSEC to notify BIND every time the zone has been signed.
+3. Tell OpenDNSSEC to notify BIND every time the zone has been signed:
 
         sudo vim /etc/opendnssec/conf.xml
 
@@ -170,18 +172,18 @@ The signed zone is now just a file on disc. We have to tell BIND to use this one
 
         <NotifyCommand>/usr/sbin/rndc reload %zone</NotifyCommand>
 
-4. Restart the Signer Engine.
+4. Restart the Signer Engine:
 
         sudo ods-signer stop
         sudo ods-signer start
 
-5. Verify that the zone is signed on the resolver machine. Notice that the AD-flag is not set.
+5. Verify that the zone is signed on the resolver machine. Notice that the AD-flag is not set:
 
-        > dig +dnssec www.groupX.odslab.se
+        dig +dnssec www.groupX.odslab.se
 
-6. Verify that DNSSEC records are correctly served for this zone.
+6. Verify that DNSSEC records are correctly served for this zone:
 
-        > dig @127.0.0.1 groupX.odslab.se SOA +dnssec
+        dig @127.0.0.1 groupX.odslab.se SOA +dnssec
 
 
 
@@ -190,44 +192,43 @@ The signed zone is now just a file on disc. We have to tell BIND to use this one
 
 The zone is now signed and we have verified that DNSSEC is working. It is then time to publish the DS RR.
 
-1. Wait until the KSK is ready to be published in the parent zone.
+1. Wait until the KSK is ready to be published in the parent zone:
 
         sudo ods-enforcer key list -v
 
-2. Show the DS RRs that we are about to publish. Notice that they share the key tag with the KSK.
+2. Show the DS RRs that we are about to publish. Notice that they share the key tag with the KSK:
 
         sudo ods-enforcer key export --zone groupX.odslab.se --ds
 
 3. Ask your teacher to update the DS in the parent zone.
 
-4. Wait until the DS has been uploaded.
+4. Wait until the DS has been uploaded. Check the DS with the following command:
 
-        > dig @ns.odslab.se groupX.odslab.se DS
+        dig @ns.odslab.se groupX.odslab.se DS
 
-5. It is now safe to tell the Enforcer that it has been seen.
+5. It is now safe to tell the Enforcer that it has been seen:
 
         sudo ods-enforcer key ds-seen --zone groupX.odslab.se --keytag KEYTAG
 
-6. The KSK is now considered as active.
+6. The KSK is now considered as active. Check the key list with the following command:
 
         sudo ods-enforcer key list
 
 7. Verify that we can query the zone from the *resolver* machine.
-   The AD-flag should be set.
+   The AD-flag should be set:
 
-        > dig +dnssec www.groupX.odslab.se
+        dig +dnssec www.groupX.odslab.se
 
 
 ## KSK Rollover
 
 The KSK rollover is usually done at the end of its lifetime. But a key rollover can be enforced before that by issuing the rollover command.
 
-1. Check how long time it is left before the KSK should be rolled.
+1. Check how long time it is left before the KSK should be rolled:
 
         sudo ods-enforcer key list
 
-2. We will now enforce a key rollover. If a key rollover has been
-   initiated then this command will be ignored.
+2. We will now enforce a key rollover. If a key rollover has been initiated then this command will be ignored:
 
         sudo ods-enforcer key rollover --zone groupX.odslab.se --keytype KSK
 
@@ -241,9 +242,9 @@ The KSK rollover is usually done at the end of its lifetime. But a key rollover 
 
 5. Wait until the DS has been uploaded.
 
-        > dig @ns.odslab.se groupX.odslab.se DS
+        dig @ns.odslab.se groupX.odslab.se DS
 
-6. It is now safe to tell the Enforcer that it has been seen.
+6. It is now safe to tell the Enforcer that it has been seen:
 
         sudo ods-enforcer key ds-seen --zone groupX.odslab.se --keytag KEYTAG
 
@@ -254,7 +255,7 @@ The KSK rollover is usually done at the end of its lifetime. But a key rollover 
 8. Verify that we can query the zone from the *resolver* machine.
 
         sudo rndc flush
-        > dig +dnssec www.groupX.odslab.se
+        dig +dnssec www.groupX.odslab.se
 
 
 
@@ -272,7 +273,7 @@ We will add a new policy named "lab2".  It will use RSASHA512 with NSEC instead 
 
         <Policy name="lab2">
 
-4. Change from NSEC to NSEC3.
+4. Change from NSEC to NSEC3:
 
         <Denial>
           <NSEC3>
@@ -289,11 +290,11 @@ We will add a new policy named "lab2".  It will use RSASHA512 with NSEC instead 
 
 6. Save and exit.
 
-7. Verify that the KASP looks OK.
+7. Verify that the KASP looks OK:
 
         sudo ods-kaspcheck
 
-8. Load the new policy into OpenDNSSEC.
+8. Load the new policy into OpenDNSSEC:
 
         sudo ods-enforcer policy import
 
@@ -304,7 +305,7 @@ A second zone will be added by using the command line interface.
 
 1. Make a copy of your current zone.
 
-        > cd /var/cache/bind/zones/unsigned/
+        cd /var/cache/bind/zones/unsigned/
         sudo cp groupX.odslab.se sub.groupX.odslab.se
 
 2. Add it to OpenDNSSEC. You will get an error from *rndc*, because we have not configured BIND to know about the sub-zone. This will be done later.
@@ -352,7 +353,7 @@ We need to create a delegation to the zone that we just created. And also make s
 
 5. Go the *resolver* and query for the DS.
 
-        > dig sub.groupX.odslab.se DS
+        dig sub.groupX.odslab.se DS
 
 6.  Tell OpenDNSSEC that the DS has been seen.
 
@@ -368,7 +369,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 1. Generate a TSIG new base64 encoded random secret using the following command:
 
-        > openssl rand -base64 32
+        openssl rand -base64 32
 
 2. Update the adapter configuration file with the new TSIG secret.
 
@@ -402,6 +403,8 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
         sudo vim /etc/opendnssec/conf.xml
 
+    File contents:
+
         <Listener>
         <Interface><Port>5353</Port></Interface>
         </Listener>
@@ -427,14 +430,16 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 7. Use dig to verify that zone transfer works as expected.
 
-        > dig @127.0.0.1 -p 5353 \
+        dig @127.0.0.1 -p 5353 \
           -y hmac-sha256:tsig.groupX.odslab.se:SECRET \
           groupX.odslab.se
 
-8.  Update the name server configuration to fetch the zone via zone transfer.
+8.  Update the name server configuration to fetch the zone via zone transfer:
 
         sudo install -d -o bind -g bind /var/cache/bind/zones/slave
         sudo vim /etc/bind/named.conf.local
+
+    File contents:
 
          key tsig.groupX.odslab.se. {
              algorithm hmac-sha256;
@@ -453,12 +458,12 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
     That was a massive piece of configuration! You can always check your configuration for syntax errors using the following command:
 
-        > named-checkconf
+        named-checkconf
 
-9.  Finally, restart BIND.
+9.  Finally, restart BIND:
 
         sudo rndc reload
 
-10.  You should also verify that the zone is served by BIND.
+10.  You should also verify that the zone is served by BIND:
 
-        > dig +dnssec @127.0.0.1 groupX.odslab.se SOA
+        dig +dnssec @127.0.0.1 groupX.odslab.se SOA

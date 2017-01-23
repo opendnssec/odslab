@@ -28,17 +28,17 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 
 7.  Restart Unbound
 
-        > systemctl restart unbound
+        systemctl restart unbound
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 
-        > dig +dnssec www.opendnssec.org
+        dig +dnssec www.opendnssec.org
 
 9.  Also try resolving a domain where DNSSEC is broken.
 
-        > dig www.trasigdnssec.se
+        dig www.trasigdnssec.se
 
     But we can see that in fact the domain does contain the information
     if we bypass the DNSSEC validation:
 
-        > dig +cd +dnssec www.trasigdnssec.se
+        dig +cd +dnssec www.trasigdnssec.se

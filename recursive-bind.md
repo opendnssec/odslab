@@ -43,17 +43,17 @@ the people log into, i.e. there is no change.
 
 7.  Restart BIND9
 
-        > systemctl restart bind9
+        systemctl restart bind9
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 
-        > dig +dnssec www.opendnssec.org
+        dig +dnssec www.opendnssec.org
 
 9.  Also try resolving a domain where DNSSEC is broken.
 
-        > dig www.trasigdnssec.se
+        dig www.trasigdnssec.se
 
     But we can see that in fact the domain does contain the information
     if we bypass the DNSSEC validation:
 
-        > dig +cd www.trasigdnssec.se
+        dig +cd www.trasigdnssec.se
