@@ -6,7 +6,7 @@ will verify the interoperability.
 
 1. OpenDNSSEC cannot access your tokens, which you will see with this command.
 
-        > sudo ods-hsmutil info
+        sudo ods-hsmutil info
 
 2. You need to configure your tokens in OpenDNSSEC. The repository name
    is what OpenDNSSEC uses to identify the tokens internally. Note that
@@ -14,7 +14,7 @@ will verify the interoperability.
    forget to replace XXXX with the User PIN set used when initializing
    the token and be sure the indicated Module is correct.
 
-        > sudo vim /etc/opendnssec/conf.xml
+        sudo vim /etc/opendnssec/conf.xml
 
     File contents:
 
@@ -27,14 +27,14 @@ will verify the interoperability.
 
 3.  Now it is possible for OpenDNSSEC to access the tokens.
 
-        > sudo ods-hsmutil info
+        sudo ods-hsmutil info
 
 4.  Try generating keys and signatures.
 
-        > sudo ods-hsmutil test SoftHSM
+        sudo ods-hsmutil test SoftHSM
 
 5. There is also a tool which will perform speed tests on the HSM. It
    has been noted that using multiple threads on these virtual machines
    will decrease the performance dramatically.
 
-        > sudo ods-hsmspeed -r SoftHSM -i 1000 -s 2048 -t 1
+        sudo ods-hsmspeed -r SoftHSM -i 1000 -s 2048 -t 1

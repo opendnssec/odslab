@@ -2,11 +2,11 @@
 
 1.  Also install an authoritative nameserver.
 
-        > sudo apt-get install bind9
+        sudo apt-get install bind9
 
 2.  Change its configuration to make sure its DNSSEC aware:
 
-        > sudo vim /etc/bind/named.conf.options
+        sudo vim /etc/bind/named.conf.options
 
     Make sure the following line:
 
@@ -16,13 +16,13 @@
 
 3.  Create some directories.
 
-        > sudo mkdir /var/cache/bind/zones
-        > sudo mkdir /var/cache/bind/zones/unsigned
-        > sudo mkdir /var/cache/bind/zones/signed
+        sudo mkdir /var/cache/bind/zones
+        sudo mkdir /var/cache/bind/zones/unsigned
+        sudo mkdir /var/cache/bind/zones/signed
 
 4.  Create a zone named after your group.
 
-        > sudo vim /var/cache/bind/zones/unsigned/groupX.odslab.se
+        sudo vim /var/cache/bind/zones/unsigned/groupX.odslab.se
 
     File contents:
 
@@ -51,7 +51,7 @@
 
 6. Reload the server.
 
-        > sudo rndc reload
+        sudo rndc reload
 
 7.  Try resolving the information from the resolver.
 

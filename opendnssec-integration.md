@@ -10,7 +10,7 @@ The first two have been covered in previous labs. This lab will cover the third 
 
 1. Create a simple script.
 
-        > sudo vim /var/opendnssec/dnskey.pl
+        sudo vim /var/opendnssec/dnskey.pl
 
     File contents:
 
@@ -23,11 +23,11 @@ The first two have been covered in previous labs. This lab will cover the third 
 
 2. Make it executable.
 
-        > sudo chmod +x /var/opendnssec/dnskey.pl
+        sudo chmod +x /var/opendnssec/dnskey.pl
 
 3. Configure OpenDNSSEC to run this script.
 
-        > sudo vim /etc/opendnssec/conf.xml
+        sudo vim /etc/opendnssec/conf.xml
 
     File contents:
 
@@ -37,15 +37,15 @@ The first two have been covered in previous labs. This lab will cover the third 
 
 4. Restart the Enforcer.
 
-        > sudo ods-enforcer stop
-        > sudo ods-enforcer start
+        sudo ods-enforcer stop
+        sudo ods-enforcer start
 
 5. Enforce a key rollover.
 
-        > sudo ods-enforcer key rollover \
+        sudo ods-enforcer key rollover \
                            --zone sub.groupX.odslab.se \
                            --keytype KSK
 
 6. You will get a DNSKEY in your file once the new KSK is ready.
 
-        > sudo ods-ksmutil key list --zone sub.groupX.odslab.se
+        sudo ods-ksmutil key list --zone sub.groupX.odslab.se

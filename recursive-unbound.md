@@ -5,22 +5,22 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 1.  Connect to the server (resolverX.odslab.se) by using SSH or PuTTY.
 2.  Change the host name.
 
-        > sudo hostname resolverX.odslab.se
+        sudo hostname resolverX.odslab.se
 
 3.  Login and logout to get an updated command prompt.
 4.  Uninstall BIND if previously installed.
 
-        > sudo dpkg --purge bind9
+        sudo dpkg --purge bind9
 
 5.  Install Unbound as the resolver. Also install dnsutils for dig(1).
 
-        > sudo apt-get update
-        > sudo apt-get upgrade
-        > sudo apt-get install unbound dnsutils
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install unbound dnsutils
 
 6.  Configure the Unbound not to use any forwarders
 
-        > sudo vim /etc/default/unbound
+        sudo vim /etc/default/unbound
 
     File contents:
 
