@@ -25,8 +25,8 @@ This lab will prepare the second server by installing the latest software. Altho
 7.  Continue to install some prerequisites to be able to compile OpenDNSSEC:
 
         sudo apt-get install libssl-dev libldns-dev \
-                               libxml2-dev libxml2-utils \
-                               libsqlite3-dev sqlite3
+                             libxml2-dev libxml2-utils \
+                             libsqlite3-dev sqlite3
 
 8.  Install OpenDNSSEC. The version number to use will be provided by your teacher:
 
