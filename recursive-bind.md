@@ -16,7 +16,7 @@ should install *either* BIND or Unbound -- not both.
         sudo apt-get install bind9
 
 5.  Change the configuration in BIND so that it only listens on
-    the localhost.
+    the localhost. Note that some of the options below may already be present in the default configuration file.
 
         sudo vim /etc/bind/named.conf.options
 
@@ -38,7 +38,7 @@ should install *either* BIND or Unbound -- not both.
 
 7.  Restart BIND9
 
-        systemctl restart bind9
+        sudo systemctl restart bind9
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 

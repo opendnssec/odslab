@@ -21,7 +21,7 @@ will verify the interoperability.
         <Repository name="SoftHSM">
           <Module>/usr/lib/x86_64-linux-gnu/softhsm/libsofthsm2.so</Module>
           <TokenLabel>OpenDNSSEC</TokenLabel>
-          <PIN>XXXX></PIN>
+          <PIN>XXXX</PIN>
           <SkipPublicKey/>
         </Repository>
 
