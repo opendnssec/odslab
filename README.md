@@ -7,8 +7,9 @@ All documents are distributed by OpenDNSSEC under a Creative Commons Attribution
 ## Table of Contents
 
 - [Introduction](intro.md)
-- [Setup a Secure Resolver using BIND](recursive-bind.md)
-- [Setup a Secure Resolver using Unbound](recursive-unbound.md)
+- Install a Secure Resolver, one of:
+    - [Setup a Secure Resolver using BIND](recursive-bind.md)
+    - [Setup a Secure Resolver using Unbound](recursive-unbound.md)
 - [Install OpenDNSSEC](opendnssec-install.md)
 - [SoftHSM](softhsm.md)
 - [HSM Testing and Benchmarking](hsm-testing.md)
