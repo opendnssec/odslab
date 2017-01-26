@@ -263,7 +263,7 @@ The KSK rollover is usually done at the end of its lifetime. But a key rollover 
 
 ## Adding a New Policy
 
-We will add a new policy named "lab2".  It will use RSASHA512 with NSEC instead of the default RSASHA256 with NSEC3.
+We will add a new policy named "lab2".  It will use RSASHA512 with NSEC3 instead of the default RSASHA256 with NSEC.
 
 1. Open the kasp.xml file.
 
