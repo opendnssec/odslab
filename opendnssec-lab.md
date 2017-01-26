@@ -208,7 +208,7 @@ The zone is now signed and we have verified that DNSSEC is working. It is then t
 
         dig @ns.odslab.se groupX.odslab.se DS
 
-5. It is now safe to tell the Enforcer that it has been seen:
+5. It is now safe to tell the Enforcer that it has been seen. Replace KEYTAG with the keytag of your current KSK.
 
         sudo ods-enforcer key ds-seen --zone groupX.odslab.se --keytag KEYTAG
 
