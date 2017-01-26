@@ -399,7 +399,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
              <Remote>
                <Address>127.0.0.1</Address>
              </Remote>
-           </Notify
+           </Notify>
          </Outbound>
 
 3. We also need to enable the listener in the main configuration file. As we already have a nameserver listening on port 53, we use a different port (5353) in this lab.
@@ -435,7 +435,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
         dig @127.0.0.1 -p 5353 \
           -y hmac-sha256:tsig.groupX.odslab.se:SECRET \
-          groupX.odslab.se
+          groupX.odslab.se AXFR
 
 8.  Update the name server configuration to fetch the zone via zone transfer:
 
