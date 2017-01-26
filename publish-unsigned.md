@@ -12,13 +12,17 @@
 
         dnssec-enable yes;
 
-3.  Create some directories:
+3.  And start the bind server
+
+        sudo systemctl start bind9
+
+4.  Create some directories:
 
         sudo mkdir /var/cache/bind/zones
         sudo mkdir /var/cache/bind/zones/unsigned
         sudo mkdir /var/cache/bind/zones/signed
 
-4.  Create a zone named after your group:
+5.  Create a zone named after your group:
 
         sudo vim /var/cache/bind/zones/unsigned/groupX.odslab.se
 
@@ -36,7 +40,7 @@
         @   IN NS nsX.odslab.se.
         www IN CNAME nsX.odslab.se.
 
-5.  Add the zone to BIND:
+6.  Add the zone to BIND:
 
         sudo vim /etc/bind/named.conf.local
 
@@ -47,10 +51,10 @@
             file "zones/unsigned/groupX.odslab.se";
         };
 
-6. Reload the server:
+7. Reload the server:
 
         sudo rndc reload
 
-7.  Try resolving the information from the resolver:
+8.  Try resolving the information from the resolver:
 
         dig groupX.odslab.se SOA
