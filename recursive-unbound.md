@@ -28,7 +28,7 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 
 7.  Restart Unbound
 
-        systemctl restart unbound
+        sudo systemctl restart unbound
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 

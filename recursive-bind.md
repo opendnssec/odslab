@@ -38,7 +38,7 @@ should install *either* BIND or Unbound -- not both.
 
 7.  Restart BIND9
 
-        systemctl restart bind9
+        sudo systemctl restart bind9
 
 8.  Verify by using dig. Notice that the AD-flag is set.
 
