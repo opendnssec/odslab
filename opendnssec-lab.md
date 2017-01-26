@@ -305,10 +305,11 @@ We will add a new policy named "lab2".  It will use RSASHA512 with NSEC3 instead
 
 A second zone will be added by using the command line interface.
 
-1. Make a copy of your current zone.
+1. Make a copy of your current zone. Also adjust the $ORIGIN in the copy.
 
         cd /var/cache/bind/zones/unsigned/
         sudo cp groupX.odslab.se sub.groupX.odslab.se
+        vi sub.groupX.odslab.se
 
 2. Add it to OpenDNSSEC. You will get an error from *rndc*, because we have not configured BIND to know about the sub-zone. This will be done later.
 
