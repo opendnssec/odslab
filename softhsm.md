@@ -6,6 +6,9 @@ HSMs are used for storing the keys securely and for acceleration. SoftHSM is a g
 
         sudo vim /etc/softhsm/softhsm2.conf
 
+   there is no editing needed at this point but storage path and options
+   are specified here.
+
 2. Create a directory for the SoftHSM tokens:
 
         sudo mkdir /var/lib/softhsm/tokens/

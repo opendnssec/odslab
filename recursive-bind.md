@@ -8,11 +8,6 @@ should install *either* BIND or Unbound -- not both.
 
         sudo hostname resolverX.odslab.se
 
-```comment
-Why is this necessary?  It looks the same name as the machine name
-the people log into, i.e. there is no change.
-```
-
 3.  Logout and login to get an updated command prompt.
 4.  Install BIND as the resolver.
 
@@ -33,13 +28,13 @@ the people log into, i.e. there is no change.
             listen-on { 127.0.0.1; };
         };
 
-6.  Configure the Ubuntu BIND9 configuration to update resolv.conf
+6.  Instruct the operating system to use the local nameserver:
 
-        sudo vim /etc/default/bind9
+        sudo vim /etc/resolv.conf
 
-    File contents:
+    Change the nameserver line into:
 
-        RESOLVCONF=yes
+        nameserver 127.0.0.1
 
 7.  Restart BIND9
 

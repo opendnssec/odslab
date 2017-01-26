@@ -115,6 +115,8 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
         sudo mkdir /var/run/opendnssec
         sudo ods-control start
 
+   The creating of /var/run/opendnssec is only necessary when having rebooted the machine.  This should be handled by the package management.
+
 2. Be sure to monitor the system log for any error conditions, some problems can only be reported once the daemons are already in the background.
 
         tail /var/log/syslog
