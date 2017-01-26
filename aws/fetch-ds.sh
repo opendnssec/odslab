@@ -17,6 +17,7 @@ fetch() {
 
 	echo "Fetching DS for ${DOMAIN} ..." >&2
 	dig +time=1 @${SERVER} ${DOMAIN} DNSKEY >${DNSKEY}
+	ldns-key2ds -n $DNSKEY >&2
 	ldns-key2ds -n $DNSKEY >> $DS
 	rm -f ${DNSKEY}
 }
