@@ -13,7 +13,7 @@ export ODS_KEYPAIR_STUDENT="ods-student-20170126"
 # Maximum is currently 90 groups (180 instances)
 # More can be requested here:
 # http://aws.amazon.com/contact-us/ec2-request/
-export ODS_STUDENT_COUNT=1
+export ODS_STUDENT_COUNT=15
 
 # Network settings
 export ODS_EC2_SG_ID=sg-14a9fd72
