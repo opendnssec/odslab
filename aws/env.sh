@@ -8,7 +8,7 @@ export ODS_DOMAIN_NAME=odslab.se
 export ODS_EC2_REGION=eu-west-1
 
 # SSH Key Pairs
-export ODS_KEYPAIR_STUDENT="ods-student-20170126"
+export ODS_KEYPAIR_STUDENT="ods-student-20170601"
 
 # Maximum is currently 90 groups (180 instances)
 # More can be requested here:
@@ -22,5 +22,5 @@ export ODS_EC2_SUBNET_ID=subnet-eaf785b2
 
 # update with latest 64-bit EBS AMI from https://cloud-images.ubuntu.com/locator/ec2/
 # (search for "eu-west amd64 ebs")
-export ODS_EC2_AMI=ami-6f587e1c
+export ODS_EC2_AMI=ami-ef141f89
 export ODS_EC2_TYPE=t2.micro
