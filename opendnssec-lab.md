@@ -54,6 +54,7 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
           </Validity>
           <Jitter>PT2M</Jitter>
           <InceptionOffset>PT3600S</InceptionOffset>
+	  <MaxZoneTTL>PT60S</MaxZoneTTL>
         </Signatures>
 
 4. The TTL and safety margins for the keys are also lower:
