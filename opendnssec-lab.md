@@ -310,7 +310,7 @@ A second zone will be added by using the command line interface.
 
         cd /var/cache/bind/zones/unsigned/
         sudo cp groupX.odslab.se sub.groupX.odslab.se
-        vi sub.groupX.odslab.se
+        sudo vi sub.groupX.odslab.se
 
 2. Add it to OpenDNSSEC. You will get an error from *rndc*, because we have not configured BIND to know about the sub-zone. This will be done later.
 
