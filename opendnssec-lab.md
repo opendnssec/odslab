@@ -410,10 +410,10 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
     File contents:
 
         <Listener>
-        <Interface><Port>5353</Port></Interface>
+          <Interface><Port>5353</Port></Interface>
         </Listener>
 
-4. Almost done, time to update the zone list and select DNS as the output adapter.  For this we export the zonelist to get an up-to-date copy, modify it and import it back
+4. Almost done, time to update the zone list and select DNS as the output adapter.  For this we export the zonelist to get an up-to-date copy, modify the entry for groupX.odslab.se and import it back again.
 
         sudo ods-enforcer zonelist export
         sudo vim /etc/opendnssec/zonelist.xml
