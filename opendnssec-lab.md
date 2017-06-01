@@ -225,7 +225,7 @@ The zone is now signed and we have verified that DNSSEC is working. It is then t
 
 ## KSK Rollover
 
-The KSK rollover is usually done at the end of its lifetime. But a key rollover can be enforced before that by issuing the rollover command.
+The KSK rollover is usually done at the end of its lifetime. But a key rollover can be forced before that by issuing the rollover command.
 
 1. Check how long time it is left before the KSK should be rolled:
 
