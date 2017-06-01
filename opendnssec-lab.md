@@ -231,7 +231,7 @@ The KSK rollover is usually done at the end of its lifetime. But a key rollover 
 
         sudo ods-enforcer key list
 
-2. We will now enforce a key rollover. If a key rollover has been initiated then this command will be ignored:
+2. We will now force a key rollover. If a key rollover has been initiated then this command will be ignored:
 
         sudo ods-enforcer key rollover --zone groupX.odslab.se --keytype KSK
 
