@@ -22,7 +22,7 @@ lab.
 
 ### Connecting to a Server
 
-Use an SSH client (such as OpenSSH or PuTTY) to connect to your server.
+Use an SSH client (such as OpenSSH or PuTTY) to connect to your servers.
 The private key will be given to you by the teacher.
 
 **OpenSSH**
