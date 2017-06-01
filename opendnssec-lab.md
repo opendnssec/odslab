@@ -241,7 +241,7 @@ The KSK rollover is usually done at the end of its lifetime. But a key rollover 
 
 4. The DS RRs can be exported to the teacher once the new KSK is ready. Ask the teacher to upload it.
 
-        sudo ods-enforcer key export --ds --zone groupX.odslab.se --keystate ready > groupX.ds
+        sudo ods-enforcer key export --ds --zone groupX.odslab.se > groupX.ds
 
 5. Wait until the DS has been uploaded.
 
