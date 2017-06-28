@@ -26,3 +26,5 @@ It is possible to configure multiple tokens, although this is not something we w
         sudo softhsm2-util --show-slots
 
    Note that SoftHSM will always show an uninitialized token in addition to the one you initialized. This is deliberate.
+
+Next Section: [HSM Testing and Benchmarking](hsm-testing.md)

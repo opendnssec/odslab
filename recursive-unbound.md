@@ -42,3 +42,5 @@ The purpose of the lab is to setup the resolver on the first server. You should 
     if we bypass the DNSSEC validation:
 
         dig +cd +dnssec www.trasigdnssec.se
+
+Next Section: [Install OpenDNSSEC](opendnssec-install.md)

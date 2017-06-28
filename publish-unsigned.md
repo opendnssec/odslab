@@ -58,3 +58,5 @@
 8.  Try resolving the information from the resolver:
 
         dig groupX.odslab.se SOA
+
+Next Section: [OpenDNSSEC lab](opendnssec-lab.md)
