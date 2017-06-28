@@ -36,3 +36,5 @@ This lab will prepare the second server by installing the latest software. Altho
         ./configure
         make
         sudo make install
+
+Next Section: [SoftHSM](softhsm.md)

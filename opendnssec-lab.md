@@ -470,3 +470,5 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 10.  You should also verify that the zone is served by BIND:
 
         dig +dnssec @127.0.0.1 groupX.odslab.se SOA
+
+Next Section: [Testing](testing.md)

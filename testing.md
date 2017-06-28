@@ -8,3 +8,5 @@ There are various tools where you can test DNS and DNSSEC.
 - [OARC's source port test](https://www.dns-oarc.net/oarc/services/porttest) can be used to check .resolver's source port
 - The [DNSSEC Analyzer](http://dnssec-debugger.verisignlabs.com/) from VeriSign Labs is an on-line tool to assist with diagnosing problems with DNSSEC-signed names and zones.
 - [validns](http://www.validns.net/) is an high performance DNS/DNSSEC zone validator that can be used check your zone before publication.
+
+Next Section: [OpenDNSSEC integration](opendnssec-integration.md)
