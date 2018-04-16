@@ -9,12 +9,9 @@ The configuration needs to be adjusted to better fit this setup.
 
         sudo vim /etc/opendnssec/conf.xml
 
-    The repository list was adjusted in a previous lab.
+    The repository list was adjusted in a [previous lab](hsm-testing.md).
 
-2. We will be rolling keys in a rapid pace, burning up a lot of keys in a
-   year.  The default setting is to pre-generate keys for a year, which
-   will take a long time with so many keys.  So we want to decrease this by
-   modifying the setting AutomaticKeyGenerationPeriod to:
+2. We will be rolling keys in a rapid pace, burning up a lot of keys in a year. The default setting is to pre-generate keys for a year, which will take a long time with so many keys.  So we want to decrease this by modifying the setting AutomaticKeyGenerationPeriod to:
 
         <AutomaticKeyGenerationPeriod>P2D</AutomaticKeyGenerationPeriod>
 
@@ -113,7 +110,6 @@ We will use the provided KASP policy "lab". It uses very low values on the timin
 
 1. At this point we should start the OpenDNSSEC daemons.  Both enforcer and signer daemons are started using:
 
-        sudo mkdir /var/run/opendnssec
         sudo ods-control start
 
    The creating of /var/run/opendnssec is only necessary when having rebooted the machine.  This should be handled by the package management.
@@ -142,11 +138,11 @@ Zones can be added in two ways, either by command line or by editing the zonelis
 
 3. Have a look on the signconf:
 
-        less /var/opendnssec/signconf/groupX.odslab.se.xml
+        less /var/opendnssec/signconf/group*.odslab.se.xml
 
 4. Have a look on the signed zone file:
 
-        less /var/cache/bind/zones/signed/groupX.odslab.se
+        less /var/cache/bind/zones/signed/group*.odslab.se
 
 ## Publish the Signed Zone
 
@@ -365,6 +361,7 @@ We need to create a delegation to the zone that we just created. And also make s
                                --zone sub.groupX.odslab.se \
                                --keytag KEYTAG
 
+
 ## Zone Transfers
 
 OpenDNSSEC may also be fetch unsigned zones and/or serve signed zones using its built in zone transfer server.
@@ -430,7 +427,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 6. Check that OpenDNSSEC is listening on port 5353.
 
-        sudo netstat -anp | grep :5353
+        sudo netstat -tulpan | grep :5353
 
 7. Use dig to verify that zone transfer works as expected.
 
@@ -472,4 +469,6 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
         dig +dnssec @127.0.0.1 groupX.odslab.se SOA
 
+
+---
 Next Section: [Testing](testing.md)
