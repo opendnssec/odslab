@@ -2,7 +2,7 @@
 
 1.  Install an authoritative nameserver:
 
-        sudo apt-get install bind9
+        sudo apt-get install -y bind9
 
 2.  Change its configuration to make sure its DNSSEC aware:
 
