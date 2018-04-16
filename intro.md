@@ -43,6 +43,7 @@ The private key will be given to you by the teacher.
 Documentation can be found online at [wiki.opendnssec.org](http://wiki.opendnssec.org).
 
 ### Get Started
+
 Let's get started by installing a secure resolver:
 
 - [Setup a Secure Resolver using BIND](recursive-bind.md)
