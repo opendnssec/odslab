@@ -58,7 +58,7 @@ should install *either* BIND or Unbound -- not both.
 
     But we can see that in fact the domain does contain the information if we bypass the DNSSEC validation:
 
-        dig +cd www.trasigdnssec.se
+        dig +cd +dnssec www.trasigdnssec.se
 
 
 ---
