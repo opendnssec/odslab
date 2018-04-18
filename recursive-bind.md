@@ -44,9 +44,10 @@ should install *either* BIND or Unbound -- not both.
         listen-on-v6 { ::1; };
         listen-on { 127.0.0.1; };
 
-10. Restart BIND9
+10. Restart BIND9 and networking
 
         sudo systemctl restart bind9
+        sudo systemctl restart networking
 
 11. Verify by using dig. Notice that the AD-flag is set.
 
