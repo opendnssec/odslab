@@ -34,7 +34,7 @@ This lab will prepare the second server by installing the latest software. Altho
 
 9.  Install OpenDNSSEC. The version number to use will be provided by your teacher:
 
-        wget http://dist.opendnssec.org/source/opendnssec-VERSION.tar.gz
+        wget https://dist.opendnssec.org/source/opendnssec-VERSION.tar.gz
         tar -xzf opendnssec-VERSION.tar.gz
         cd opendnssec-VERSION
         ./configure
