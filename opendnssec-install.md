@@ -6,7 +6,7 @@ This lab will prepare the second server by installing the latest software. Altho
 
 2.  Change the host name:
 
-        sudo hostnamectl set-hostname ns1.odslab.se
+        sudo hostnamectl set-hostname nsX.odslab.se
 
 3.  Logout and login to get an updated command prompt.
 
