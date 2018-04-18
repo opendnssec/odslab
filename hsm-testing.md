@@ -6,6 +6,8 @@ It is always good to verify the functionality of the HSM before starting to sign
 
         sudo ods-hsmutil info
 
+   N.B.: The command above will **fail** due to missing configuration.
+
 2. You need to configure your tokens in OpenDNSSEC. The repository name is what OpenDNSSEC uses to identify the tokens internally. Note that the repository name is not the same as the HSM token label. Don't forget to replace XXXX with the User PIN set used when initializing the token and be sure the indicated Module is correct.
 
         sudo vim /etc/opendnssec/conf.xml
