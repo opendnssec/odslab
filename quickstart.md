@@ -22,7 +22,7 @@
 
 ### OpenDNSSEC 2.0.4
 
-    wget http://dist.opendnssec.org/source/opendnssec-2.0.4.tar.gz
+    wget https://dist.opendnssec.org/source/opendnssec-2.0.4.tar.gz
     tar xzf opendnssec-2.0.4.tar.gz
     cd opendnssec-2.0.4 
     ./configure && make && sudo make install
