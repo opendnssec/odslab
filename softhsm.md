@@ -4,7 +4,7 @@ HSMs are used for storing the keys securely and for acceleration. SoftHSM is a g
 
 1.  Install SoftHSM:
 
-        sudo apt-get install -y softhsm2
+        sudo apt-get update && sudo apt-get install -y softhsm2
 
 2. First configure the token in SoftHSM:
 
