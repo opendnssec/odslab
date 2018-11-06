@@ -23,25 +23,7 @@ should install *either* BIND or Unbound -- not both.
 
         sudo apt-get install -y bind9
 
-7.  Uninstall Unbound if previously installed:
-
-        sudo dpkg --purge unbound
-
-8.  Configure Ubuntu networking to use the local resolver:
-
-        sudo vim /etc/netplan/50-cloud-init.yaml
-
-    Add the following configuration at in the `eth0` section:
-
-        nameservers:
-          addresses:
-            - 127.0.0.1
-
-    And run:
-
-        netplan apply
-
-9. Configure BIND so that it only listens on localhost only. Note that some of the options below may already be present in the default configuration file.
+7. Configure BIND so that it only listens on localhost only. Note that some of the options below may already be present in the default configuration file.
 
         sudo vim /etc/bind/named.conf.options
 
@@ -50,15 +32,15 @@ should install *either* BIND or Unbound -- not both.
         listen-on-v6 { ::1; };
         listen-on { 127.0.0.1; };
 
-10. Restart BIND9 and networking
+8. Restart BIND9
 
         sudo systemctl restart bind9
 
-11. Verify by using dig. Notice that the AD-flag is set.
+9. Verify by using dig. Notice that the AD-flag is set.
 
         dig @127.0.0.1 +dnssec www.opendnssec.org
 
-12. Also try resolving a domain where DNSSEC is broken.
+10. Also try resolving a domain where DNSSEC is broken.
 
         dig @127.0.0.1 www.trasigdnssec.se
 
