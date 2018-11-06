@@ -9,6 +9,11 @@ AWS="aws --profile ${ODS_AWS_PROFILE} --region ${ODS_EC2_REGION}"
 for TYPE in resolver signer; do
 	RUNFILE=/tmp/ec2-student-${TYPE}.$$.tmp
 
+	#cloud-config
+	#hostname: mynode
+	#fqdn: mynode.example.com
+	#manage_etc_hosts: true
+
 	## create all instances
 	${AWS} ec2 run-instances \
 		--count ${ODS_STUDENT_COUNT} \
