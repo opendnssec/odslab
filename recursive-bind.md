@@ -29,11 +29,17 @@ should install *either* BIND or Unbound -- not both.
 
 8.  Configure Ubuntu networking to use the local resolver:
 
-        sudo vim /etc/network/interfaces.d/50-cloud-init.cfg
+        sudo vim /etc/netplan/50-cloud-init.yaml
 
-    Add the following configuration right after `iface eth0 inet dhcp`:
+    Add the following configuration at in the `eth0` section:
 
-        dns-nameservers 127.0.0.1
+        nameservers:
+          addresses:
+            - 127.0.0.1
+
+    And run:
+
+        netplan apply
 
 9. Configure BIND so that it only listens on localhost only. Note that some of the options below may already be present in the default configuration file.
 
@@ -47,7 +53,6 @@ should install *either* BIND or Unbound -- not both.
 10. Restart BIND9 and networking
 
         sudo systemctl restart bind9
-        sudo systemctl restart networking
 
 11. Verify by using dig. Notice that the AD-flag is set.
 
