@@ -216,7 +216,7 @@ The zone is now signed and we have verified that DNSSEC is working. It is then t
 7. Verify that we can query the zone from the *resolver* machine.
    The AD-flag should be set:
 
-        dig +dnssec www.groupX.odslab.se
+        dig @127.0.0.1 +dnssec www.groupX.odslab.se
 
 
 ## KSK Rollover
@@ -254,7 +254,7 @@ The KSK rollover is usually done at the end of its lifetime. But a key rollover 
 8. Verify that we can query the zone from the *resolver* machine.
 
         sudo rndc flush
-        dig +dnssec www.groupX.odslab.se
+        dig @127.0.0.1 +dnssec www.groupX.odslab.se
 
 
 
@@ -353,7 +353,7 @@ We need to create a delegation to the zone that we just created. And also make s
 
 5. Go the *resolver* and query for the DS.
 
-        dig sub.groupX.odslab.se DS
+        dig @127.0.0.1 sub.groupX.odslab.se DS
 
 6.  Tell OpenDNSSEC that the DS has been seen.
 
@@ -467,7 +467,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 10.  You should also verify that the zone is served by BIND:
 
-        dig +dnssec @127.0.0.1 groupX.odslab.se SOA
+        dig @127.0.0.1 +dnssec groupX.odslab.se SOA
 
 
 ---
