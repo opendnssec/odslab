@@ -24,15 +24,15 @@ The purpose of the lab is to setup the resolver on the first server. You should 
 
 7.  Verify by using dig. Notice that the AD-flag is set.
 
-        dig +dnssec www.opendnssec.org
+        dig @127.0.0.1 +dnssec www.opendnssec.org
 
 8.  Also try resolving a domain where DNSSEC is broken.
 
-        dig www.trasigdnssec.se
+        dig @127.0.0.1 www.trasigdnssec.se
 
     But we can see that in fact the domain does contain the information if we bypass the DNSSEC validation:
 
-        dig +cd +dnssec www.trasigdnssec.se
+        dig @127.0.0.1 +cd +dnssec www.trasigdnssec.se
 
 
 
