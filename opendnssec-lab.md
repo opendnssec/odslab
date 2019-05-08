@@ -431,7 +431,7 @@ In this lab we will set up OpenDNSSEC for outbound zone transfers protected with
 
 7. Use dig to verify that zone transfer works as expected.
 
-        dig @127.0.0.1 -p 5353 \
+        dig @127.0.0.1 -p 5353 +noedns \
           -y hmac-sha256:tsig.groupX.odslab.se:SECRET \
           groupX.odslab.se AXFR
 
