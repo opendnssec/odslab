@@ -1,4 +1,4 @@
-"""Extract student DNS RRs"""
+"""Extract instance DNS RRs"""
 
 import boto3
 
