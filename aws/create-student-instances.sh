@@ -4,6 +4,7 @@
 
 . `dirname $0`/env.sh
 
+export PAGER=cat
 AWS="aws --profile ${ODS_AWS_PROFILE} --region ${ODS_EC2_REGION}"
 
 for TYPE in resolver signer; do
